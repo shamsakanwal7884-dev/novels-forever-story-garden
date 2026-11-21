@@ -452,3 +452,33 @@
   .nn-shine::after, .nn-float-slow, .nn-twinkle { animation: none !important; }
   .nn-type { width: auto; animation: none !important; border: 0; }
 }
+
+/* ---------- Nadia Nawaz page: orbit, aurora, sound wave ---------- */
+.nn-orbit { position: absolute; inset: 0; animation: nn-spin 36s linear infinite; }
+.nn-orbit-item {
+  position: absolute; left: 50%; top: 50%;
+  transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
+}
+.nn-orbit-upright { animation: nn-spin 36s linear infinite reverse; }
+.nn-aurora {
+  position: absolute; border-radius: 9999px; filter: blur(70px); opacity: 0.45; pointer-events: none;
+  animation: nn-drift 16s ease-in-out infinite alternate; animation-delay: var(--d, 0s);
+}
+@keyframes nn-drift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, -40px) scale(1.2); } }
+.nn-wave-path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: nn-wave-draw 3.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards, nn-wave-flow 6s linear 3.5s infinite; }
+@keyframes nn-wave-draw { to { stroke-dashoffset: 0; } }
+@keyframes nn-wave-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -2800; } }
+.nn-card-lift { transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.5s; }
+.nn-card-lift:hover { transform: translateY(-8px); box-shadow: var(--shadow-glow); }
+.nn-icon-pop { transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4); }
+.group:hover .nn-icon-pop { transform: scale(1.15) rotate(-8deg); }
+.nn-pulse-dot { animation: nn-pulse 1.8s ease-in-out infinite; }
+@keyframes nn-pulse { 0%, 100% { box-shadow: 0 0 0 0 oklch(0.7 0.17 150 / 0.7); } 50% { box-shadow: 0 0 0 7px oklch(0.7 0.17 150 / 0); } }
+
+@media (max-width: 767px) {
+  .nn-aurora { filter: blur(40px); opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nn-orbit, .nn-orbit-upright, .nn-aurora, .nn-pulse-dot { animation: none !important; }
+  .nn-wave-path { animation: none !important; stroke-dashoffset: 0; }
+}

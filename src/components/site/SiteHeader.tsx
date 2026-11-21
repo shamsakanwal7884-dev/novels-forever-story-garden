@@ -18,6 +18,7 @@ const NAV = [
   { to: "/novels", label: "Novels" },
   { to: "/authors", label: "Authors" },
   { to: "/playlists", label: "Playlists" },
+  { to: "/nadia-nawaz", label: "Nadia Nawaz" },
   { to: "/pdfs", label: "PDF Library" },
   { to: "/contact", label: "Support" },
 ] as const;

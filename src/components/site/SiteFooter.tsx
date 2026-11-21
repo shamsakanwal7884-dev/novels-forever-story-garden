@@ -24,12 +24,13 @@ export function SiteFooter() {
             <li><Link to="/playlists" className="hover:text-primary">Playlists</Link></li>
             <li><Link to="/pdfs" className="hover:text-primary">PDF library</Link></li>
             <li><Link to="/contact" className="hover:text-primary">Support & feedback</Link></li>
+            <li><Link to="/nadia-nawaz" className="hover:text-primary">Meet Nadia Nawaz</Link></li>
           </ul>
         </div>
         <div className="space-y-3">
           <h3 className="font-display text-xl text-primary">Channel & support</h3>
           <p className="text-sm text-muted-foreground">
-            Channel owner & narrator: <span className="text-foreground">{CHANNEL_OWNER.name}</span>
+            Channel owner & narrator: <Link to="/nadia-nawaz" className="text-foreground hover:text-primary">{CHANNEL_OWNER.name}</Link>
             <br />
             Support: <span className="text-foreground">{OWNER.name}</span>
             <br />

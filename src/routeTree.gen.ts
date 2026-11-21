@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as NadiaNawazRouteImport } from './routes/nadia-nawaz'
 import { Route as PdfsRouteImport } from './routes/pdfs'
 import { Route as PlaylistsRouteImport } from './routes/playlists'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -41,6 +42,11 @@ const AuthRoute = AuthRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NadiaNawazRoute = NadiaNawazRouteImport.update({
+  id: '/nadia-nawaz',
+  path: '/nadia-nawaz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PdfsRoute = PdfsRouteImport.update({
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
+  '/nadia-nawaz': typeof NadiaNawazRoute
   '/pdfs': typeof PdfsRoute
   '/playlists': typeof PlaylistsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
+  '/nadia-nawaz': typeof NadiaNawazRoute
   '/pdfs': typeof PdfsRoute
   '/playlists': typeof PlaylistsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
+  '/nadia-nawaz': typeof NadiaNawazRoute
   '/pdfs': typeof PdfsRoute
   '/playlists': typeof PlaylistsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/contact'
+    | '/nadia-nawaz'
     | '/pdfs'
     | '/playlists'
     | '/reset-password'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/contact'
+    | '/nadia-nawaz'
     | '/pdfs'
     | '/playlists'
     | '/reset-password'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/contact'
+    | '/nadia-nawaz'
     | '/pdfs'
     | '/playlists'
     | '/reset-password'
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
+  NadiaNawazRoute: typeof NadiaNawazRoute
   PdfsRoute: typeof PdfsRoute
   PlaylistsRoute: typeof PlaylistsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nadia-nawaz': {
+      id: '/nadia-nawaz'
+      path: '/nadia-nawaz'
+      fullPath: '/nadia-nawaz'
+      preLoaderRoute: typeof NadiaNawazRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pdfs': {
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
+  NadiaNawazRoute: NadiaNawazRoute,
   PdfsRoute: PdfsRoute,
   PlaylistsRoute: PlaylistsRoute,
   ResetPasswordRoute: ResetPasswordRoute,

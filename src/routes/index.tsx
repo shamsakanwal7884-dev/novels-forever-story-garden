@@ -378,7 +378,10 @@ function Hero() {
 
 function NarratorCard() {
   return (
-    <div className="mt-6 flex max-w-lg items-center gap-4 rounded-2xl border border-primary/30 bg-ink/50 p-3 pr-5 shadow-gold sm:mt-8">
+    <Link
+      to="/nadia-nawaz"
+      className="mt-6 flex max-w-lg items-center gap-4 rounded-2xl border border-primary/30 bg-ink/50 p-3 pr-5 shadow-gold transition-colors hover:border-primary/70 sm:mt-8"
+    >
       <span className="relative block h-16 w-16 shrink-0 sm:h-[4.5rem] sm:w-[4.5rem]">
         <img
           src={media.narrator}
@@ -392,9 +395,9 @@ function NarratorCard() {
       <div className="min-w-0">
         <p className="text-[10px] uppercase tracking-[0.25em] text-primary/80">Every story in the voice of</p>
         <p className="truncate font-display text-2xl font-semibold leading-tight text-gold">{CHANNEL_OWNER.name}</p>
-        <p className="text-xs text-muted-foreground">{CHANNEL_OWNER.role}</p>
+        <p className="text-xs text-muted-foreground">{CHANNEL_OWNER.role} · Meet her →</p>
       </div>
-    </div>
+    </Link>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Mic } from "lucide-react";
 import { CHANNEL_OWNER } from "@/lib/catalog";
 
@@ -12,9 +13,9 @@ export function OwnerStrip() {
           <span className="hidden sm:inline">{CHANNEL_OWNER.role}</span>
         </span>
         <span className="h-3 w-px shrink-0 bg-primary/40" aria-hidden />
-        <span className="whitespace-nowrap font-display text-base font-semibold italic leading-none text-gold">
+        <Link to="/nadia-nawaz" className="whitespace-nowrap font-display text-base font-semibold italic leading-none text-gold hover:brightness-125">
           {CHANNEL_OWNER.name}
-        </span>
+        </Link>
       </div>
     </div>
   );

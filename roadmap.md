@@ -7,3 +7,4 @@
 - [ ] Import original records (reviews, feedback, added novels/parts/categories, stats, PDF list) — waiting on exports.
 - [ ] Re-upload novel PDF files — waiting on the owner.
 - [ ] Check offline install after publishing.
+- [x] Nadia Nawaz page: animated profile, live channel numbers, achievements, journey, top novels and official contacts.

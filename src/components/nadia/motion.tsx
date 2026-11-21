@@ -73,11 +73,13 @@ export function CountUp({ value, format, duration = 2200 }: { value: number; for
 }
 
 /** Name revealed letter by letter, flipping up from the baseline. */
-export function LetterReveal({ text, className, start = 0, step = 55 }: { text: string; className?: string; start?: number; step?: number }) {
+export function LetterReveal({
+  text, className, letterClassName, start = 0, step = 55,
+}: { text: string; className?: string; letterClassName?: string; start?: number; step?: number }) {
   return (
     <span className={className} aria-label={text}>
       {Array.from(text).map((ch, i) => (
-        <span key={i} aria-hidden className="nn-letter" style={{ "--d": `${start + i * step}ms` } as CSSProperties}>
+        <span key={i} aria-hidden className={cn("nn-letter", letterClassName)} style={{ "--d": `${start + i * step}ms` } as CSSProperties}>
           {ch === " " ? "\u00a0" : ch}
         </span>
       ))}
