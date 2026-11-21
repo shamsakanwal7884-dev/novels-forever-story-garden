@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { BrandIcon } from "@/components/nadia/BrandIcon";
-import { CountUp, Equalizer, LetterReveal, Reveal, ScrollProgress, Tilt, useInView } from "@/components/nadia/motion";
+import { CountUp, Equalizer, LetterReveal, Reveal, ScrollProgress, Tilt, useInView, usePlayWhenVisible } from "@/components/nadia/motion";
 import { Embers } from "@/components/site/Embers";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,7 +83,7 @@ function NadiaPage() {
   const joinedLabel = new Date(stats.joined).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
   return (
-    <div className="relative overflow-x-clip">
+    <div className="nn-page relative overflow-x-clip">
       <ScrollProgress />
       <Hero stats={stats} />
       <LiveCounters stats={stats} hours={hours} />
@@ -99,22 +99,32 @@ function NadiaPage() {
 
 /* ------------------------------------------------------------------ */
 
+/** Six identical wave periods (480 units each) so sliding the strip by half loops seamlessly. */
+const WAVE_PATH =
+  "M0 60 " +
+  Array.from({ length: 6 }, (_, i) => {
+    const x = i * 480;
+    return `C ${x + 80} 10, ${x + 160} 110, ${x + 240} 60 S ${x + 400} 10, ${x + 480} 60`;
+  }).join(" ");
+
 function Hero({ stats }: { stats: ChannelStats }) {
   const orbit = NADIA_SOCIALS.map((s, i) => ({ ...s, angle: (360 / NADIA_SOCIALS.length) * i - 90 }));
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section className="relative isolate min-h-[92vh] overflow-hidden bg-night">
-      <span className="nn-aurora left-[-10%] top-[5%] h-80 w-80 bg-primary/40" />
-      <span className="nn-aurora right-[-8%] top-[30%] h-96 w-96 bg-leather" style={{ "--d": "-6s" } as CSSProperties} />
-      <span className="nn-aurora bottom-[-10%] left-[30%] h-72 w-72 bg-accent/60" style={{ "--d": "-11s" } as CSSProperties} />
+    <section ref={play} className="relative isolate min-h-[92vh] min-h-[92svh] overflow-hidden bg-night">
+      <span className="nn-aurora left-[-10%] top-[5%] h-80 w-80" style={{ "--nn-c": "var(--primary)" } as CSSProperties} />
+      <span className="nn-aurora right-[-8%] top-[30%] h-96 w-96" style={{ "--d": "-6s", "--nn-c": "var(--leather)" } as CSSProperties} />
+      <span className="nn-aurora bottom-[-10%] left-[30%] h-72 w-72" style={{ "--d": "-11s", "--nn-c": "var(--accent)" } as CSSProperties} />
       <Embers />
-      {Array.from({ length: 18 }, (_, i) => (
-        <Star
-          key={i}
-          aria-hidden
-          className="nn-twinkle absolute h-2.5 w-2.5 fill-primary text-primary"
-          style={{ left: `${(i * 53) % 100}%`, top: `${(i * 37) % 90}%`, "--d": `${-(i % 7) * 0.45}s` } as CSSProperties}
-        />
-      ))}
+      <div aria-hidden className="nn-stars pointer-events-none absolute inset-0">
+        {Array.from({ length: 18 }, (_, i) => (
+          <Star
+            key={i}
+            className="nn-twinkle absolute h-2.5 w-2.5 fill-primary text-primary"
+            style={{ left: `${(i * 53) % 100}%`, top: `${(i * 37) % 90}%`, "--d": `${-(i % 7) * 0.45}s` } as CSSProperties}
+          />
+        ))}
+      </div>
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 pb-24 pt-16 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-24">
         <div className="text-center lg:text-left">
@@ -129,7 +139,7 @@ function Hero({ stats }: { stats: ChannelStats }) {
             The voice behind every story on <span className="text-foreground">Novels Forever</span> — turning Urdu novels
             into hours of heartfelt listening for readers around the world.
           </p>
-          <Equalizer bars={40} className="mx-auto mt-8 h-12 max-w-md lg:mx-0" />
+          <Equalizer bars={40} className="nn-eq-trim mx-auto mt-8 h-12 max-w-md lg:mx-0" />
           <div className="intro-title mt-8 flex flex-wrap justify-center gap-3 lg:justify-start" style={{ animationDelay: "1.7s" }}>
             <Button asChild variant="youtube" size="xl" className="nn-shine">
               <a href={`${channel.url}?sub_confirmation=1`} target="_blank" rel="noreferrer">
@@ -183,15 +193,20 @@ function Hero({ stats }: { stats: ChannelStats }) {
         </div>
       </div>
 
-      <svg aria-hidden viewBox="0 0 1440 120" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-24 w-full text-primary/60">
-        <path
-          className="nn-wave-path"
-          d="M0 60 C 80 10, 160 110, 240 60 S 400 10, 480 60 S 640 110, 720 60 S 880 10, 960 60 S 1120 110, 1200 60 S 1360 10, 1440 60"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-24 overflow-hidden">
+        <div className="nn-wave-flow h-full w-[200%]">
+          <svg viewBox="0 0 2880 120" preserveAspectRatio="none" className="h-full w-full text-primary/60">
+            <path
+              className="nn-wave-path"
+              pathLength={1}
+              d={WAVE_PATH}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        </div>
+      </div>
     </section>
   );
 }
@@ -205,8 +220,9 @@ function LiveCounters({ stats, hours }: { stats: ChannelStats; hours: number }) 
     { icon: PlayCircle, value: stats.videos, label: "Videos uploaded", sub: "episodes & complete novels", fmt: whole, ring: 0.76 },
     { icon: Clock3, value: hours, label: "Hours of narration", sub: "of her voice in the library", fmt: (n: number) => `${whole(n)}+`, ring: 0.88 },
   ];
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section className="relative mx-auto -mt-10 max-w-7xl px-4 sm:px-6">
+    <section ref={play} className="relative mx-auto -mt-10 max-w-7xl px-4 sm:px-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((it, i) => (
           <Reveal key={it.label} delay={i * 120}>
@@ -315,8 +331,9 @@ function Achievements({
     { icon: Feather, title: `${whole(floorNice(complete))}+ Complete Novels`, text: "Full novels, start to finish, ready to listen." },
     { icon: Award, title: `${compact(topViews)} on one novel`, text: `${topName} — her most-loved narration so far.` },
   ];
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section className="relative bg-night py-24">
+    <section ref={play} className="relative bg-night py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-primary/80">The trophy shelf</p>
@@ -396,8 +413,9 @@ function JourneyLine({ steps }: { steps: { icon: typeof Users; tag: string; titl
 
 function MostLoved({ top }: { top: typeof byViews }) {
   const loop = [...top, ...top];
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section className="relative overflow-hidden bg-night py-24">
+    <section ref={play} className="relative overflow-hidden bg-night py-24">
       <Reveal className="mx-auto max-w-7xl px-4 text-center sm:px-6">
         <p className="text-xs uppercase tracking-[0.35em] text-primary/80">Listeners' favourites</p>
         <h2 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">Her most-loved narrations</h2>
@@ -435,8 +453,9 @@ function MostLoved({ top }: { top: typeof byViews }) {
 /* ------------------------------------------------------------------ */
 
 function Contacts() {
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section id="contacts" className="relative mx-auto max-w-7xl scroll-mt-28 px-4 py-24 sm:px-6">
+    <section ref={play} id="contacts" className="relative mx-auto max-w-7xl scroll-mt-28 px-4 py-24 sm:px-6">
       <Reveal className="text-center">
         <p className="text-xs uppercase tracking-[0.35em] text-primary/80">Official contacts</p>
         <h2 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">Stay close to Nadia</h2>
@@ -485,9 +504,12 @@ function Contacts() {
 /* ------------------------------------------------------------------ */
 
 function FinalCall({ stats }: { stats: ChannelStats }) {
+  const play = usePlayWhenVisible<HTMLElement>();
   return (
-    <section className="relative isolate overflow-hidden bg-night py-24">
-      <span className="nn-aurora left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 bg-primary/40" />
+    <section ref={play} className="relative isolate overflow-hidden bg-night py-24">
+      <span className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2">
+        <span className="nn-aurora inset-0" style={{ "--nn-c": "var(--primary)" } as CSSProperties} />
+      </span>
       <Reveal className="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
         <Equalizer bars={28} className="mx-auto h-14 max-w-xs" />
         <h2 className="mt-8 font-display text-4xl font-semibold sm:text-6xl">

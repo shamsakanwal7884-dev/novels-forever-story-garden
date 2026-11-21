@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Marks an element data-shown="true" the first time it scrolls into view. */
+/**
+ * Marks an element data-shown="true" the first time it scrolls into view.
+ * Tall blocks count as seen once a quarter of the screen shows them, and if the browser
+ * never reports visibility (some in-app browsers), content is shown anyway after 2.5s.
+ */
 export function useInView<T extends HTMLElement>(threshold = 0.2) {
   const ref = useRef<T>(null);
   const [shown, setShown] = useState(false);
@@ -12,19 +16,58 @@ export function useInView<T extends HTMLElement>(threshold = 0.2) {
       setShown(true);
       return;
     }
+    let reported = false;
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
+        reported = true;
+        const seen = entries.some(
+          (e) => e.isIntersecting && (e.intersectionRatio >= threshold || e.intersectionRect.height >= window.innerHeight * 0.25),
+        );
+        if (seen) {
           setShown(true);
           io.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -8% 0px" },
+      { threshold: [0, 0.05, threshold, Math.min(1, threshold * 2)], rootMargin: "0px 0px -8% 0px" },
     );
     io.observe(el);
-    return () => io.disconnect();
+    const failsafe = window.setTimeout(() => {
+      if (!reported) {
+        setShown(true);
+        io.disconnect();
+      }
+    }, 2500);
+    return () => {
+      window.clearTimeout(failsafe);
+      io.disconnect();
+    };
   }, [threshold]);
   return { ref, shown };
+}
+
+/**
+ * Sets data-play="false" on a section while it is off-screen so the CSS pauses its looping
+ * animations; phones then only animate what the visitor can actually see.
+ */
+export function usePlayWhenVisible<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const e = entries[entries.length - 1];
+        if (e) el.dataset["play"] = e.isIntersecting ? "true" : "false";
+      },
+      { rootMargin: "150px 0px" },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      delete el.dataset["play"];
+    };
+  }, []);
+  return ref;
 }
 
 export function Reveal({
@@ -49,27 +92,27 @@ export function Reveal({
   );
 }
 
-/** Number that counts up from zero once it is on screen. */
+/** Number that counts up from zero once it is on screen (re-renders only when the text changes). */
 export function CountUp({ value, format, duration = 2200 }: { value: number; format: (n: number) => string; duration?: number }) {
   const { ref, shown } = useInView<HTMLSpanElement>(0.4);
-  const [n, setN] = useState(0);
+  const [text, setText] = useState(() => format(0));
+  const formatRef = useRef(format);
+  formatRef.current = format;
   useEffect(() => {
     if (!shown) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setN(value);
-      return;
-    }
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const total = calm ? Math.min(duration, 1200) : duration;
     let raf = 0;
     const start = performance.now();
     const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / duration);
-      setN(value * (1 - Math.pow(1 - p, 4)));
+      const p = Math.min(1, (t - start) / total);
+      setText(formatRef.current(value * (1 - Math.pow(1 - p, 4))));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [shown, value, duration]);
-  return <span ref={ref}>{format(shown ? n : 0)}</span>;
+  return <span ref={ref}>{text}</span>;
 }
 
 /** Name revealed letter by letter, flipping up from the baseline. */

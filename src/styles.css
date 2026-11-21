@@ -362,7 +362,15 @@
   .intro-overlay { animation-delay: 0.3s; }
 }
 
-/* ---------- Nadia Nawaz page ---------- */
+/* ---------- Nadia Nawaz page ----------
+ * Every animation here moves only transform/opacity so phones run it on the GPU, and
+ * sections pause their looping animations while off-screen (data-play="false").
+ * Reduced-motion / battery-saver phones still get the animations, just calmer.
+ */
+.nn-page [data-play="false"] *,
+.nn-page [data-play="false"] *::before,
+.nn-page [data-play="false"] *::after { animation-play-state: paused !important; }
+
 .nn-progress {
   position: fixed; left: 0; right: 0; top: 0; z-index: 60; height: 3px;
   background: var(--gradient-gold); transform-origin: left; transform: scaleX(0);
@@ -370,13 +378,13 @@
 }
 .nn-reveal {
   opacity: 0;
-  transform: translateY(40px) scale(0.97);
+  transform: translate3d(0, 40px, 0) scale(0.97);
   transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
   transition-delay: var(--d, 0ms);
 }
 .nn-reveal[data-shown="true"] { opacity: 1; transform: none; }
-.nn-reveal-left { transform: translateX(-60px); }
-.nn-reveal-right { transform: translateX(60px); }
+.nn-reveal-left { transform: translate3d(-60px, 0, 0); }
+.nn-reveal-right { transform: translate3d(60px, 0, 0); }
 
 .nn-letter {
   display: inline-block; opacity: 0; transform: translateY(0.7em) rotateX(-90deg);
@@ -417,7 +425,10 @@
 }
 .nn-glow-card > .nn-glow-inner { position: relative; height: 100%; border-radius: calc(1.5rem - 1.5px); background: var(--gradient-card); }
 
-.nn-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out; will-change: transform; }
+.nn-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out; }
+@media (hover: hover) and (pointer: fine) {
+  .nn-tilt:hover { will-change: transform; }
+}
 
 .nn-shine { position: relative; overflow: hidden; }
 .nn-shine::after {
@@ -445,14 +456,6 @@
 @keyframes nn-type { to { width: calc(var(--steps, 30) * 1ch); } }
 @keyframes nn-caret { 50% { border-color: transparent; } }
 
-@media (prefers-reduced-motion: reduce) {
-  .nn-reveal, .nn-medal, .nn-line { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .nn-letter { opacity: 1; transform: none; animation: none; }
-  .nn-ripple, .nn-spin, .nn-spin-fast, .nn-spin-rev, .nn-bar, .nn-marquee-rev, .nn-glow-card::before,
-  .nn-shine::after, .nn-float-slow, .nn-twinkle { animation: none !important; }
-  .nn-type { width: auto; animation: none !important; border: 0; }
-}
-
 /* ---------- Nadia Nawaz page: orbit, aurora, sound wave ---------- */
 .nn-orbit { position: absolute; inset: 0; animation: nn-spin 36s linear infinite; }
 .nn-orbit-item {
@@ -460,25 +463,52 @@
   transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
 }
 .nn-orbit-upright { animation: nn-spin 36s linear infinite reverse; }
+/* Soft glow drawn as a gradient (no live blur filter, which stalls phone GPUs). */
 .nn-aurora {
-  position: absolute; border-radius: 9999px; filter: blur(70px); opacity: 0.45; pointer-events: none;
+  position: absolute; border-radius: 9999px; opacity: 0.4; pointer-events: none;
+  background: radial-gradient(circle, var(--nn-c, var(--primary)) 0%, transparent 68%);
   animation: nn-drift 16s ease-in-out infinite alternate; animation-delay: var(--d, 0s);
 }
-@keyframes nn-drift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, -40px) scale(1.2); } }
-.nn-wave-path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: nn-wave-draw 3.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards, nn-wave-flow 6s linear 3.5s infinite; }
+@keyframes nn-drift { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(60px, -40px, 0) scale(1.2); } }
+.nn-wave-path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: nn-wave-draw 3.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
 @keyframes nn-wave-draw { to { stroke-dashoffset: 0; } }
-@keyframes nn-wave-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -2800; } }
+/* Endless flowing wave: a doubled path slid sideways, so it never repaints. */
+.nn-wave-flow { animation: nn-wave-slide 9s linear infinite; }
+@keyframes nn-wave-slide { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 .nn-card-lift { transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.5s; }
-.nn-card-lift:hover { transform: translateY(-8px); box-shadow: var(--shadow-glow); }
 .nn-icon-pop { transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4); }
-.group:hover .nn-icon-pop { transform: scale(1.15) rotate(-8deg); }
-.nn-pulse-dot { animation: nn-pulse 1.8s ease-in-out infinite; }
-@keyframes nn-pulse { 0%, 100% { box-shadow: 0 0 0 0 oklch(0.7 0.17 150 / 0.7); } 50% { box-shadow: 0 0 0 7px oklch(0.7 0.17 150 / 0); } }
-
-@media (max-width: 767px) {
-  .nn-aurora { filter: blur(40px); opacity: 0.3; }
+@media (hover: hover) {
+  .nn-card-lift:hover { transform: translateY(-8px); box-shadow: var(--shadow-glow); }
+  .group:hover .nn-icon-pop { transform: scale(1.15) rotate(-8deg); }
 }
+.nn-card-lift:active { transform: translateY(-4px) scale(0.99); }
+.nn-pulse-dot { position: relative; }
+.nn-pulse-dot::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit;
+  animation: nn-pulse 1.8s ease-out infinite;
+}
+@keyframes nn-pulse { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(3.2); opacity: 0; } }
+
+/* The page's own favourites shelf keeps moving even where the home page calms it down. */
+.nn-page .shelf-track { animation: marquee 45s linear infinite !important; }
+.nn-page .shelf-mask { overflow-x: clip; }
+
+/* Phones: fewer particles and bars, no tilt layers, so even budget phones stay smooth. */
+@media (max-width: 767px), (hover: none) {
+  .nn-tilt { transform: none; transition: none; }
+}
+@media (max-width: 767px) {
+  .nn-stars > :nth-child(2n) { display: none; }
+  .nn-eq-trim > :nth-child(n + 25) { display: none; }
+  .nn-aurora { opacity: 0.32; }
+  .nn-page .ember:nth-child(3n) { display: none; }
+}
+
+/* Reduced motion / battery saver: keep everything alive, only gentler. */
 @media (prefers-reduced-motion: reduce) {
-  .nn-orbit, .nn-orbit-upright, .nn-aurora, .nn-pulse-dot { animation: none !important; }
-  .nn-wave-path { animation: none !important; stroke-dashoffset: 0; }
+  .nn-reveal { transform: translate3d(0, 16px, 0); transition-duration: 0.6s; }
+  .nn-reveal-left, .nn-reveal-right { transform: translate3d(0, 16px, 0); }
+  .nn-aurora { animation-duration: 28s; }
+  .nn-orbit, .nn-orbit-upright { animation-duration: 60s; }
+  .nn-page .shelf-track { animation-duration: 70s !important; }
 }

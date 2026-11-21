@@ -3,6 +3,13 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
+// Hosts like Vercel only get the public build-time values; mirror them for server code
+// that reads process.env so the site works there without extra setup.
+if (typeof process !== "undefined" && process.env) {
+  process.env["SUPABASE_URL"] ??= import.meta.env["VITE_SUPABASE_URL"];
+  process.env["SUPABASE_PUBLISHABLE_KEY"] ??= import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+}
+
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };

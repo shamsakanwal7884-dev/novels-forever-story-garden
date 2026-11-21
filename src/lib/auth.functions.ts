@@ -38,6 +38,8 @@ export const claimLegacyIdentity = createServerFn({ method: "POST" })
     const user = data.user;
     if (authError || !user?.email || !user.email_confirmed_at) return { linked: false };
 
+    // Hosts without the private service key (e.g. a Vercel copy) skip legacy linking.
+    if (!process.env["SUPABASE_SERVICE_ROLE_KEY"]) return { linked: false };
     const email = user.email.trim().toLowerCase();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: imported, error: lookupError } = await supabaseAdmin

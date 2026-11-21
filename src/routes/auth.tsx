@@ -55,7 +55,8 @@ function AuthPage() {
         setChecking(false);
         return;
       }
-      await claimIdentity({ data: {} });
+      // Linking old accounts is optional; never let it block the owner's sign-in.
+      await claimIdentity({ data: {} }).catch(() => undefined);
       const { data: role, error: roleError } = await supabase
         .from("user_roles")
         .select("role")
