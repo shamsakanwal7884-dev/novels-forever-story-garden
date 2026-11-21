@@ -2,19 +2,103 @@
   "source": "code-archive",
   "artifact": "project-migration-studio-main.zip",
   "capabilities": [
-    {"capability": "application code and routes", "source": "TanStack Start app (Novels Forever): home, novels, novel details, authors, playlists, PDFs, contact, reader, owner admin, sign-in, reset password", "outcome": "migrate", "status": "in_progress", "next_action": "copy source into project, merge dependencies"},
-    {"capability": "application schema", "source": "drizzle/migrations/0000_novels_forever_core.sql (11 tables, lookups, storage rules)", "outcome": "migrate to Lovable Cloud", "status": "pending", "next_action": "enable Cloud, apply schema, create private novel-pdfs store"},
-    {"capability": "application records", "source": "previous Lovable Cloud database; no export attached; base catalog bundled in src/data/catalog.json", "outcome": "migrate", "status": "pending", "next_action": "request CSV/JSON exports after preview"},
-    {"capability": "authentication identities", "source": "owner email/password; public sign-up off; no user export", "outcome": "migrate with verified-email first login and new password", "status": "pending", "next_action": "owner email needed for admin_emails; user export after preview"},
-    {"capability": "authorization and owner roles", "source": "user_roles + has_role, admin_emails trigger, protected admin route", "outcome": "migrate", "status": "pending", "next_action": "apply with schema, verify admin boundary"},
-    {"capability": "uploaded PDF bytes", "source": "novel-pdfs private bucket in previous project; no files in archive", "outcome": "migrate", "status": "pending", "next_action": "owner re-uploads PDFs after preview"},
-    {"capability": "site artwork and welcome audio", "source": "public/media", "outcome": "migrate", "status": "pending", "next_action": "copy and check they load"},
-    {"capability": "offline reading and installation", "source": "vite-plugin-pwa service worker + manifest", "outcome": "preserve", "status": "pending", "next_action": "port config; verify after publishing"},
-    {"capability": "external providers", "source": "YouTube embeds/RSS/oEmbed, TeraBox embeds, WhatsApp links, Anabot public AI endpoint (documented public demo key)", "outcome": "preserve", "status": "pending", "next_action": "verify embeds and librarian chat"},
-    {"capability": "public endpoints and callbacks", "source": "/api/chat streaming endpoint", "outcome": "preserve", "status": "pending", "next_action": "verify /api/chat"},
-    {"capability": "webhooks and schedules", "source": "none detected", "outcome": "no migration required", "status": "verified", "next_action": "none"},
-    {"capability": "source secrets", "source": ".env excluded; only managed backend settings referenced", "outcome": "use this project's managed settings", "status": "verified", "next_action": "none"},
-    {"capability": "cutover", "source": "previous app still live", "outcome": "leave source intact until data, owner account and PDFs are moved", "status": "pending", "next_action": "after imports"},
-    {"capability": "verification", "source": "-", "outcome": "verify build, routes, public writes, admin boundary", "status": "pending", "next_action": "after port"}
+    {
+      "capability": "application code and routes",
+      "source": "TanStack Start app (Novels Forever): home, novels, novel details, authors, playlists, PDFs, contact, reader, owner admin, sign-in, reset password",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "all pages, novel details, reader, owner area load; 22 tests pass; build OK"
+    },
+    {
+      "capability": "application schema",
+      "source": "drizzle/migrations/0000_novels_forever_core.sql (11 tables, lookups, storage rules)",
+      "outcome": "migrate to Lovable Cloud",
+      "status": "verified",
+      "next_action": "11 tables, lookups and PDF file rules applied; private novel-pdfs store (50 MB) created"
+    },
+    {
+      "capability": "application records",
+      "source": "previous Lovable Cloud database; no export attached; base catalog bundled in src/data/catalog.json",
+      "outcome": "migrate",
+      "status": "pending",
+      "next_action": "request CSV/JSON exports of reviews, feedback, catalog_novels, catalog_videos, catalog_categories, novel_stats, novel_pdfs from the previous project's Cloud \u2192 Database tables"
+    },
+    {
+      "capability": "authentication identities",
+      "source": "owner email/password; public sign-up off; no user export",
+      "outcome": "migrate with verified-email first login and new password",
+      "status": "pending",
+      "next_action": "email sign-in on, public sign-up off; owner email needed (asked) to add to admin_emails; user export pending"
+    },
+    {
+      "capability": "authorization and owner roles",
+      "source": "user_roles + has_role, admin_emails trigger, protected admin route",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "signed-out visitors sent to sign-in; test owner reached owner area, read messages, added/deleted a category; visitors cannot read messages or roles"
+    },
+    {
+      "capability": "uploaded PDF bytes",
+      "source": "novel-pdfs private bucket in previous project; no files in archive",
+      "outcome": "migrate",
+      "status": "pending",
+      "next_action": "owner re-uploads PDFs after preview"
+    },
+    {
+      "capability": "site artwork and welcome audio",
+      "source": "public/media",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "hero image, welcome audio, manifest, favicon return 200"
+    },
+    {
+      "capability": "offline reading and installation",
+      "source": "vite-plugin-pwa service worker + manifest",
+      "outcome": "preserve",
+      "status": "pending",
+      "next_action": "service worker config ported; verify after publishing"
+    },
+    {
+      "capability": "external providers",
+      "source": "YouTube embeds/RSS/oEmbed, TeraBox embeds, WhatsApp links, Anabot public AI endpoint (documented public demo key)",
+      "outcome": "preserve",
+      "status": "verified",
+      "next_action": "YouTube embeds and new-uploads feed load; librarian chat answers; WhatsApp links present"
+    },
+    {
+      "capability": "public endpoints and callbacks",
+      "source": "/api/chat streaming endpoint",
+      "outcome": "preserve",
+      "status": "verified",
+      "next_action": "/api/chat streams answers"
+    },
+    {
+      "capability": "webhooks and schedules",
+      "source": "none detected",
+      "outcome": "no migration required",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "source secrets",
+      "source": ".env excluded; only managed backend settings referenced",
+      "outcome": "use this project's managed settings",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "cutover",
+      "source": "previous app still live",
+      "outcome": "leave source intact until data, owner account and PDFs are moved",
+      "status": "pending",
+      "next_action": "after imports"
+    },
+    {
+      "capability": "verification",
+      "source": "-",
+      "outcome": "verify build, routes, public writes, admin boundary",
+      "status": "pending",
+      "next_action": "public flows, owner area and visitor write verified; owner account, data import and offline check remain"
+    }
   ]
 }
