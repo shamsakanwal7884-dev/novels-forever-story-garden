@@ -28,7 +28,7 @@
       "source": "owner email/password; public sign-up off; no user export",
       "outcome": "migrate with verified-email first login and new password",
       "status": "pending",
-      "next_action": "email sign-in on, public sign-up off; owner email needed (asked) to add to admin_emails; user export pending"
+      "next_action": "owner email rdxshahzain@gmail.com on owner list; owner creates account via Users \u2192 Add user, then signs in at /auth; user export pending"
     },
     {
       "capability": "authorization and owner roles",
