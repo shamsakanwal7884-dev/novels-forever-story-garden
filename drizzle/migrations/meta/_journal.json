@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795276832347,
+      "tag": "0000_novels_forever_core",
+      "breakpoints": true
+    }
+  ]
+}

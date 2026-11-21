@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+## Application architecture
+
+Keep the Novels Forever experience in TanStack file routes and domain modules under `src/lib`; this keeps shareable pages distinct and server-only operations behind explicit boundaries.
+
+Keep owner privileges only in `user_roles` checked by `has_role`, and link migrated accounts through the server-only `legacy_user_imports` table after verified email; client input never grants access.
+
+Keep the bundled `src/data/catalog.json` as the base library and layer owner edits from the `catalog_*` tables over it; the site still works if the backend is unreachable.

@@ -10,33 +10,200 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as PdfsRouteImport } from './routes/pdfs'
+import { Route as PlaylistsRouteImport } from './routes/playlists'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthorsIndexRouteImport } from './routes/authors/index'
+import { Route as AuthorsSlugRouteImport } from './routes/authors/$slug'
+import { Route as NovelsIndexRouteImport } from './routes/novels/index'
+import { Route as NovelsSlugRouteImport } from './routes/novels/$slug'
+import { Route as ReadSlugRouteImport } from './routes/read.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PdfsRoute = PdfsRouteImport.update({
+  id: '/pdfs',
+  path: '/pdfs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaylistsRoute = PlaylistsRouteImport.update({
+  id: '/playlists',
+  path: '/playlists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
+  id: '/authors/',
+  path: '/authors/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
+  id: '/authors/$slug',
+  path: '/authors/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovelsIndexRoute = NovelsIndexRouteImport.update({
+  id: '/novels/',
+  path: '/novels/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovelsSlugRoute = NovelsSlugRouteImport.update({
+  id: '/novels/$slug',
+  path: '/novels/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReadSlugRoute = ReadSlugRouteImport.update({
+  id: '/read/$slug',
+  path: '/read/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/pdfs': typeof PdfsRoute
+  '/playlists': typeof PlaylistsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/api/chat': typeof ApiChatRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/novels/$slug': typeof NovelsSlugRoute
+  '/read/$slug': typeof ReadSlugRoute
+  '/authors/': typeof AuthorsIndexRoute
+  '/novels/': typeof NovelsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/pdfs': typeof PdfsRoute
+  '/playlists': typeof PlaylistsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/api/chat': typeof ApiChatRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/novels/$slug': typeof NovelsSlugRoute
+  '/read/$slug': typeof ReadSlugRoute
+  '/authors': typeof AuthorsIndexRoute
+  '/novels': typeof NovelsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/pdfs': typeof PdfsRoute
+  '/playlists': typeof PlaylistsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/api/chat': typeof ApiChatRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/novels/$slug': typeof NovelsSlugRoute
+  '/read/$slug': typeof ReadSlugRoute
+  '/authors/': typeof AuthorsIndexRoute
+  '/novels/': typeof NovelsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/contact'
+    | '/pdfs'
+    | '/playlists'
+    | '/reset-password'
+    | '/admin'
+    | '/api/chat'
+    | '/authors/$slug'
+    | '/novels/$slug'
+    | '/read/$slug'
+    | '/authors/'
+    | '/novels/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/contact'
+    | '/pdfs'
+    | '/playlists'
+    | '/reset-password'
+    | '/admin'
+    | '/api/chat'
+    | '/authors/$slug'
+    | '/novels/$slug'
+    | '/read/$slug'
+    | '/authors'
+    | '/novels'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/contact'
+    | '/pdfs'
+    | '/playlists'
+    | '/reset-password'
+    | '/_authenticated/admin'
+    | '/api/chat'
+    | '/authors/$slug'
+    | '/novels/$slug'
+    | '/read/$slug'
+    | '/authors/'
+    | '/novels/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
+  PdfsRoute: typeof PdfsRoute
+  PlaylistsRoute: typeof PlaylistsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiChatRoute: typeof ApiChatRoute
+  AuthorsSlugRoute: typeof AuthorsSlugRoute
+  NovelsSlugRoute: typeof NovelsSlugRoute
+  ReadSlugRoute: typeof ReadSlugRoute
+  AuthorsIndexRoute: typeof AuthorsIndexRoute
+  NovelsIndexRoute: typeof NovelsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +215,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pdfs': {
+      id: '/pdfs'
+      path: '/pdfs'
+      fullPath: '/pdfs'
+      preLoaderRoute: typeof PdfsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playlists': {
+      id: '/playlists'
+      path: '/playlists'
+      fullPath: '/playlists'
+      preLoaderRoute: typeof PlaylistsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors/': {
+      id: '/authors/'
+      path: '/authors'
+      fullPath: '/authors/'
+      preLoaderRoute: typeof AuthorsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors/$slug': {
+      id: '/authors/$slug'
+      path: '/authors/$slug'
+      fullPath: '/authors/$slug'
+      preLoaderRoute: typeof AuthorsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/novels/': {
+      id: '/novels/'
+      path: '/novels'
+      fullPath: '/novels/'
+      preLoaderRoute: typeof NovelsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/novels/$slug': {
+      id: '/novels/$slug'
+      path: '/novels/$slug'
+      fullPath: '/novels/$slug'
+      preLoaderRoute: typeof NovelsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/read/$slug': {
+      id: '/read/$slug'
+      path: '/read/$slug'
+      fullPath: '/read/$slug'
+      preLoaderRoute: typeof ReadSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
+  PdfsRoute: PdfsRoute,
+  PlaylistsRoute: PlaylistsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  ApiChatRoute: ApiChatRoute,
+  AuthorsSlugRoute: AuthorsSlugRoute,
+  NovelsSlugRoute: NovelsSlugRoute,
+  ReadSlugRoute: ReadSlugRoute,
+  AuthorsIndexRoute: AuthorsIndexRoute,
+  NovelsIndexRoute: NovelsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
