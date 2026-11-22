@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { Youtube } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { BrandIcon } from "@/components/nadia/BrandIcon";
 import { channel, totalVideos } from "@/lib/catalog";
 import { media } from "@/lib/media";
+import { NADIA_SOCIALS } from "@/lib/owner-profile";
+
+const whatsappChannel = NADIA_SOCIALS.find((s) => s.id === "whatsapp");
 
 const KEY = "nf-yt-popup";
 
@@ -57,6 +61,13 @@ export function YoutubePopup() {
               <Youtube /> Subscribe on YouTube
             </a>
           </Button>
+          {whatsappChannel ? (
+            <Button asChild variant="whatsapp" size="lg">
+              <a href={whatsappChannel.url} target="_blank" rel="noreferrer">
+                <BrandIcon id="whatsapp" className="h-5 w-5" /> Join WhatsApp channel
+              </a>
+            </Button>
+          ) : null}
           <Button variant="glass" size="lg" onClick={() => setOpen(false)}>
             Maybe later
           </Button>

@@ -41,6 +41,8 @@ const SOCIAL_COLOR: Record<SocialLink["id"], string> = {
   instagram: "var(--instagram)",
   facebook: "var(--facebook)",
   threads: "var(--threads)",
+  whatsapp: "var(--whatsapp)",
+  tiktok: "var(--tiktok)",
 };
 
 const SOCIAL_NOTE: Record<SocialLink["id"], string> = {
@@ -48,6 +50,8 @@ const SOCIAL_NOTE: Record<SocialLink["id"], string> = {
   instagram: "Behind the mic, new-release teasers and little moments from the studio.",
   facebook: "Join the reader family, share requests and talk about your favourite novels.",
   threads: "Quick thoughts, polls on the next novel and conversations with listeners.",
+  whatsapp: "Join the official channel — new novel alerts land straight in your WhatsApp.",
+  tiktok: "Short clips, favourite dialogues and the moments listeners keep replaying.",
 };
 
 const compact = (n: number) =>
